@@ -1,0 +1,40 @@
+﻿<html>
+<head>
+
+</head>
+<body>
+
+<div style="height:80%;display:flex;justify-content:center;align-items:center;">
+	<div>
+		<input id="textBox"><br>
+		<div class="numbers">
+			<input type="button" value="1" onclick="insert(this)"><input type="button" value="2" onclick="insert(this)"><input type="button" value="3" onclick="insert(this)"><br>
+			<input type="button" value="4" onclick="insert(this)"><input type="button" value="5" onclick="insert(this)"><input type="button" value="6" onclick="insert(this)"><br>
+			<input type="button" value="7" onclick="insert(this)"><input type="button" value="8" onclick="insert(this)"><input type="button" value="9" onclick="insert(this)"><br>
+		</div>
+		<input type="button" value="Calculate" onclick="calc()"><input type="button" value="Reset" onclick="reset()">
+	</div>
+		<p id="text">Value not yet asigned</p>
+</div>
+
+<script>
+var data = 0;
+var x, y;
+
+function reset(){
+	document.getElementById("textBox").value = "";
+	document.getElementById("text").innerHTML = "Value not yet asigned";
+}
+
+function insert(element){
+	document.getElementById("textBox").value =  element.getAttribute('value');
+}
+
+function calc(){
+	document.getElementById("text").innerHTML = "The value is " + document.getElementById("textBox").value;
+}
+
+</script>
+
+</body>
+</html>

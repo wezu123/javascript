@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <input id="input">
+    <button onclick="inp()">Cotton</button>
+    <p>
+    </p>
+  </body>
+  <script type="text/javascript">
+
+  function inp(){
+    var x = document.getElementById("input"),
+    y = document.getElementsByTagName("p")[0];
+    if(x.value == "Cotton"){
+      y.innerHTML = "it matches";
+    }else{
+      y.innerHTML = "no match";
+    }
+    console.log(typeof(x.value));
+  }
+  </script>
+</html>

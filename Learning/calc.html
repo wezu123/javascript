@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+
+<div style="height:80%;display:flex;justify-content:center;align-items:center;">
+<div class="calculator">
+  <div class="calculator__display">0</div>
+<div class="calculator__keys">
+	<button class="key--operator" data-action="add">+</button>
+	<button class="key--operator" data-action="subtract">-</button>
+	<button class="key--operator" data-action="multiply">&times;</button>
+	<button class="key--operator" data-action="divide">÷</button><br>
+	<button>1</button>
+	<button>2</button>
+	<button>3</button><br>
+	<button>4</button>
+	<button>5</button>
+	<button>6</button><br>
+	<button>7</button>
+	<button>8</button>
+	<button>9</button><br>
+	<button>0</button>
+	<button data-action="decimal">.</button>
+	<button data-action="clear">AC</button>
+	<button class="key--equal" data-action="calculate">=</button>
+</div>
+</div>
+</div>
+
+<script>
+const calculator = document.querySelector('.calculator');
+const keys = calculator.querySelector('.calculator__keys');
+const display = document.querySelector('.calculator__display');
+
+keys.addEventListener('click', e => {
+	if (e.target.matches('button')){
+		const key = e.target;
+		const action = key.dataset.action;
+
+		if(!action){
+		console.log('number key!')
+		}
+
+		if(
+		action === 'add' ||
+		action === 'subtract' ||
+		action === 'multiply' ||
+		action === 'divide'
+		){
+		console.log('operator key!')
+		}
+
+		if (action === 'decimal') {
+		  console.log('decimal key!')
+		}
+
+		if (action === 'clear') {
+		  console.log('clear key!')
+		}
+
+		if (action === 'calculate') {
+		  console.log('equal key!')
+		}
+	}
+})
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
