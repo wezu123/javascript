@@ -3,6 +3,7 @@
     <meta charset="utf-8">
   </head>
   <body>
+    <p>Work in progress. Current code will cut the string into a table, and output content of said table. Separate items with spaces or commas.</p>
     <input id="input">
     <input type="button" onclick="start()" value = "Write down">
     <p>Idle
@@ -11,24 +12,26 @@
   <script type="text/javascript">
 
   const input = document.getElementById("input");
-  const text = document.getElementsByTagName("p")[0];
+  const text = document.getElementsByTagName("p")[1];
       function start(){
         console.log("Button press noted");
-        let x = input.value, z = 0;
+        let x = input.value, f = 0;
         let y = x.split(/[\s,]/);
         var newElement = document.createElement("P");
         text.parentNode.appendChild(newElement);
-        y.forEach(function(index) {
+
+        for(var z=0;z<y.length;++z){
               setTimeout(function() {
                 console.log("Loop iteration");
-                let newText = document.createTextNode("This is the second paragraph.");
+                let newText = document.createTextNode(y[0+f]);
                 let newBreak = document.createElement("BR");
+                console.log(z);
                 newElement.appendChild(newText);
                 newElement.appendChild(newBreak);
-                z++;
-                text.innerHTML = z;
-              }, index * 100);
-            });
+                text.innerHTML = "Table size: " + z;
+                f++;
+              }, z*800);
+            }
       }
   </script>
 </html>
