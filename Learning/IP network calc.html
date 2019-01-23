@@ -10,45 +10,90 @@
     <input type="button" onclick="start()" value = "Calculate"><br>
     <p id="result"></p>
   </body>
-  <script type="text/javascript">
-    const IPinput = document.getElementById("IPinput");
-    const MACinput = document.getElementById("MACinput");
-    const result = document.getElementById("result");
-    var newElement = document.createElement("P");
+<script type="text/javascript">
+const IPinput = document.getElementById("IPinput");
+const MACinput = document.getElementById("MACinput");
+const result = document.getElementById("result");
+var hostMAC = MACinput.value.split(/[.]/);
+var hostIP = IPinput.value.split(/[.]/);
+var newElement = document.createElement("P");
 
-    function start(){
-      let hostIP = IPinput.value.split(/[.]/);
-      let netIP = [0, 0, 0, 0];
-      let disIP = [0,0,0,0];
-      var hostMAC = MACinput.value.split(/[.]/);
+function start(){
+  hostMAC = MACinput.value.split(/[.]/);
+  hostIP = IPinput.value.split(/[.]/);
+  if(hostMAC.length == 4){
+    fullVer();
+  }else{
+    brLine("Invalid MAC");
+  }
+}
 
-      if(hostMAC.length == 4){
-        let fHostMAC = [];
-        console.log(hostMAC[3]);
-        fHostMAC[0] = flipbits(parseInt(hostMAC[0], 10).toString(2));
-        fHostMAC[1] = flipbits(makeup((parseInt(hostMAC[0], 10).toString(2))));
-        fHostMAC[2] = flipbits(makeup((parseInt(hostMAC[0], 10).toString(2))));
-        fHostMAC[3] = flipbits(parseInt(hostMAC[0], 10).toString(2));
-        let ffHostMAC = [];
-        console.log(typeof(fHostMAC[3]));
-        console.log(5..toString(2));
-        console.log(fHostMAC[0])
-        function makeup(e){
-          var result2 = (2**8 + 2**e - 1).toString(2).slice(1);
-          return result2;
-        }
+function fullVer(){
 
-        let f2 = makeup(fHostMAC[3]);
-        console.log(f2);
+  var netIP = [], disIP = [], arNetIP = [], arDisIP = [];
+  var displayNetIP = '', displayDisIP = '';
 
-        ffHostMAC[0] = parseInt(fHostMAC[0], 2);
-        ffHostMAC[1] = parseInt(fHostMAC[1], 2);
-        ffHostMAC[2] = parseInt(fHostMAC[2], 2);
-        ffHostMAC[3] = flipbits(parseInt(fHostMAC[3], 2));
+  function arrayIP(){
+    for(let i = 0;hostIP.length>i;i++){
+    hostIP[0+i] = parseInt(hostIP[0+i], 10).toString(2);
+    hostIP[0+i] = hostIP[0+i].split('');
+    }
+    for(i = 0; hostIP.length>i;i++){
+      for(let iW = 0; 8-hostIP[0+i].length>iW;){
+        hostIP[0+i].unshift(0);
+        if(iW > 40){break;}
+      }
+      if(hostIP[0+i].length==8){console.log(i+1+" done")}
+    }
+    console.log(hostIP);
+  }
 
-        console.log(typeof(fHostMAC[3]));
-        console.log(ffHostMAC[3]);
+  function arrayMAC(){
+    for(let i = 0;hostMAC.length>i;i++){
+    hostMAC[0+i] = parseInt(hostMAC[0+i], 10).toString(2);
+    hostMAC[0+i] = hostMAC[0+i].split('');
+    }
+    for(i = 0; hostMAC.length>i;i++){
+      for(let iW = 0; 8-hostMAC[0+i].length>iW;){
+        hostMAC[0+i].unshift(0);
+        if(iW > 40){break;}
+      }
+      if(hostMAC[0+i].length==8){console.log(i+1+" done")}
+    }
+    console.log(hostMAC);
+  }
 
+  arrayIP();
+  console.log("Switch");
+  arrayMAC();
+
+  console.log("Arrays ready")
+  for(i=0;hostIP.length>i;i++){
+    netIP[0+i] = new Array(8);
+    for(var iW=0;hostIP[0+i].length>iW;iW++){
+      netIP[i][iW] = hostIP[i][iW] & hostMAC[i][iW];
+    }
+    arNetIP[i] = parseInt((netIP[i].join('')), 2);
+    displayNetIP += arNetIP[i] + '.';
+  }
+  console.log(netIP)
+  console.log(displayNetIP);
+
+  console.log("break")
+
+  for(i=0;hostIP.length>i;i++){
+    disIP[0+i] = new Array(8);
+    for(iW=0;hostIP[0+i].length>iW;iW++){
+      disIP[i][iW] = netIP[i][iW] + (1 - hostMAC[i][iW]);
+    }
+    arDisIP[i] = parseInt((disIP[i].join('')), 2);
+    displayDisIP += arDisIP[i] + '.';
+  }
+
+  brLine("Network address: " + displayNetIP.slice(0, displayNetIP.length-1));
+  brLine("Distributing address: " + displayDisIP.slice(0, displayDisIP.length-1));
+}
+      /*function shortVer(){
         for(i=0;i<hostMAC.length;i++){
           netIP[0+i] = hostIP[0+i] & hostMAC[0+i];
         }
@@ -93,9 +138,8 @@
           brLine("Distributing address: " + displayDisIP);
       }
       else{
-        console.log("Invalid MAC");
+        console.log("Invalid MAC")
       }
-    }
 
     function cFullMAC(ones, total) {
       var result = (2**total + 2**ones - 1).toString(2).slice(1);
@@ -107,21 +151,14 @@
       return result;
     }
 
-    function flipbits(str) {
-      str = str.toString(2);
-      console.log(str);
-      return str.split('').map(function (b) {
-        return (1 - b).toString();
-      }).join('');
-    }
-
-    function brLine(aText){
-      let newBreak = document.createElement("BR");
-      let newText = document.createTextNode(aText);
-      newElement.appendChild(newText);
-      newElement.appendChild(newBreak);
-      result.parentNode.appendChild(newElement);
-    }
+    */
+function brLine(aText){
+  let newBreak = document.createElement("BR");
+  let newText = document.createTextNode(aText);
+  newElement.appendChild(newText);
+  newElement.appendChild(newBreak);
+  result.parentNode.appendChild(newElement);
+}
 
   </script>
 </html>
