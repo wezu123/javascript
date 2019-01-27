@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <title>IP calc</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <p>IP address calculator. Insert your host IP address and MAC (it can also be given as a number of bits, e.g 22 instead of 255.255.252.0)</p>
+    <input id="IPinput">
+    <input id="MACinput">
+    <input type="button" onclick="start()" value = "Calculate"><br>
+    <p id="result"></p>
+  </body>
+<script type="text/javascript">
+const IPinput = document.getElementById("IPinput");
+const MACinput = document.getElementById("MACinput");
+const result = document.getElementById("result");
+var hostMAC = MACinput.value.split(/[.]/);
+var hostIP = IPinput.value.split(/[.]/);
+var newElement = document.createElement("P");
+var netIP = [], disIP = [], arNetIP = [], arDisIP = [];
+
+
+function start(){
+  hostMAC = MACinput.value.split(/[.]/);
+  hostIP = IPinput.value.split(/[.]/);
+  if(hostMAC.length == 4){
+    fullVer();
+  }else if(hostMAC.length == 1 & hostMAC != !hostMAC & hostMAC <= 32){
+    shortVer();
+  }
+  else{
+    brLine("Invalid MAC");
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function fullVer(){
+  var displayNetIP = '', displayDisIP = '';
+  arrayIP();
+  console.log("Switch");
+  arrayMAC();
+
+  console.log("Arrays ready")
+  for(i=0;hostIP.length>i;i++){
+    netIP[0+i] = new Array(8);
+    for(var iW=0;hostIP[0+i].length>iW;iW++){
+      netIP[i][iW] = hostIP[i][iW] & hostMAC[i][iW];
+    }
+    arNetIP[i] = parseInt((netIP[i].join('')), 2);
+    displayNetIP += arNetIP[i] + '.';
+  }
+  console.log(netIP)
+  console.log(displayNetIP);
+
+  console.log("break")
+
+  for(i=0;hostIP.length>i;i++){
+    disIP[0+i] = new Array(8);
+    for(iW=0;hostIP[0+i].length>iW;iW++){
+      disIP[i][iW] = netIP[i][iW] + (1 - hostMAC[i][iW]);
+    }
+    arDisIP[i] = parseInt((disIP[i].join('')), 2);
+    displayDisIP += arDisIP[i] + '.';
+  }
+  brLine("Network address: " + displayNetIP.slice(0, displayNetIP.length-1));
+  brLine("Distributing address: " + displayDisIP.slice(0, displayDisIP.length-1));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+function shortVer(){
+  var displayNetIP = '', displayDisIP = '';
+  let nbMAC = parseInt(hostMAC[0], 10);
+  console.log("Number of bits in a mask " + nbMAC);
+  var fullMAC = new Array(4);
+  for(i = 0;fullMAC.length>i;i++){
+    fullMAC[i] = new Array(8)
+    fullMAC[i].fill(0, 0, 8);
+  }
+  console.log(fullMAC)
+  for(var i = 0;i<fullMAC.length;i++){
+    for(var iW = 0; iW<8; iW++){
+      if(nbMAC>0){
+      fullMAC[i][iW] = 1;
+      }
+    else{break;}
+      nbMAC -= 1;
+    }
+    console.log(nbMAC)
+  }
+  console.log("over")
+  arrayIP();
+  for(i=0;hostIP.length>i;i++){
+    netIP[0+i] = new Array(8);
+    for(var iW=0;hostIP[0+i].length>iW;iW++){
+      netIP[i][iW] = hostIP[i][iW] & fullMAC[i][iW];
+    }
+    arNetIP[i] = parseInt((netIP[i].join('')), 2);
+    displayNetIP += arNetIP[i] + '.';
+  }
+  for(i=0;hostIP.length>i;i++){
+    disIP[0+i] = new Array(8);
+    for(iW=0;hostIP[0+i].length>iW;iW++){
+      disIP[i][iW] = netIP[i][iW] + (1 - fullMAC[i][iW]);
+    }
+    arDisIP[i] = parseInt((disIP[i].join('')), 2);
+    displayDisIP += arDisIP[i] + '.';
+  }
+  brLine("Network address: " + displayNetIP.slice(0, displayNetIP.length-1));
+  brLine("Distributing address: " + displayDisIP.slice(0, displayDisIP.length-1));
+}
+///////////////////////////////////////////////////////////////////////////////
+
+function arrayIP(){
+  for(let i = 0;hostIP.length>i;i++){
+  hostIP[i] = parseInt(hostIP[i], 10).toString(2);
+  hostIP[i] = hostIP[i].split('');
+  }
+  for(i = 0; hostIP.length>i;i++){
+    for(let iW = 0; 8-hostIP[i].length>iW;){
+      hostIP[i].unshift(0);
+      if(iW > 40){break;}
+    }
+    if(hostIP[i].length==8){console.log(i+1+" done")}
+  }
+  console.log(hostIP);
+}
+
+function arrayMAC(){
+  for(let i = 0;hostMAC.length>i;i++){
+  hostMAC[i] = parseInt(hostMAC[i], 10).toString(2);
+  hostMAC[i] = hostMAC[i].split('');
+  }
+  console.log(hostMAC)
+  for(i = 0; hostMAC.length>i;i++){
+    for(let iW = 0; 8-hostMAC[i].length>iW;){
+      hostMAC[i].unshift(0);
+      if(iW > 40){break;}
+    }
+    if(hostMAC[i].length==8){console.log(i+1+" done")}
+  }
+  console.log(hostMAC);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+function brLine(aText){
+  let newBreak = document.createElement("BR");
+  let newText = document.createTextNode(aText);
+  newElement.appendChild(newText);
+  newElement.appendChild(newBreak);
+  result.parentNode.appendChild(newElement);
+}
+
+  </script>
+</html>
