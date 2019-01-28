@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Clicker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body style="background-color:#f7f7f7">
+    <div class="content">
+      <div class="upgrades">
+        Wood pick<button data-pick="wood" disabled="true">Kup</button><br>
+        Iron pick<button  data-pick="iron" disabled="true">Kup</button><br>
+        Diamond pick<button  data-pick="diamond" disabled="true">Kup</button>
+      </div>
+        <div class="container">
+          <div class="display"><span>Collected: </span><p style="display:inline;" id="display">0</p></div>
+          <input class="mine" type="button" onclick="inc()" value="Mine"><br>
+        </div>
+      <div class="weapons">
+      </div>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
