@@ -1,0 +1,32 @@
+.display {
+padding:0px 10px 10px 2px;
+}
+
+.mine{
+  margin:auto;
+}
+
+.container{
+  background-color: #aa4f3d;
+  height:200px;
+  min-width: 100px;
+}
+
+.content{
+  height:100%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upgrades{
+  background-color: #a86457;
+  min-width:200px;
+  height:200px;
+}
+
+.weapons{
+  background-color: #a86457;
+  height:200px;
+  min-width:200px;
+}

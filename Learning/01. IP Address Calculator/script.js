@@ -1,26 +1,12 @@
-<html>
-  <head>
-    <title>IP calc</title>
-    <meta charset="utf-8">
-  </head>
-  <body>
-    <p>IP address calculator. Insert your host IP address and MAC (it can also be given as a number of bits, e.g 22 instead of 255.255.252.0)</p>
-    <input id="IPinput">
-    <input id="MACinput">
-    <input type="button" onclick="start()" value = "Calculate"><br>
-    <p id="result"></p>
-  </body>
-<script type="text/javascript">
 const IPinput = document.getElementById("IPinput");
 const MACinput = document.getElementById("MACinput");
-const result = document.getElementById("result");
+const result = document.querySelector("#result");
 var hostMAC = MACinput.value.split(/[.]/);
 var hostIP = IPinput.value.split(/[.]/);
-var newElement = document.createElement("P");
 var netIP = [], disIP = [], arNetIP = [], arDisIP = [];
 
-
 function start(){
+  result.style.backgroundColor = "#f2f2f2";
   hostMAC = MACinput.value.split(/[.]/);
   hostIP = IPinput.value.split(/[.]/);
   if(hostMAC.length == 4){
@@ -29,7 +15,7 @@ function start(){
     shortVer();
   }
   else{
-    brLine("Invalid MAC");
+    brLine("Invalid mask");
   }
 }
 
@@ -64,7 +50,7 @@ function fullVer(){
     displayDisIP += arDisIP[i] + '.';
   }
   brLine("Network address: " + displayNetIP.slice(0, displayNetIP.length-1));
-  brLine("Distributing address: " + displayDisIP.slice(0, displayDisIP.length-1));
+  brLine("Broadcast address: " + displayDisIP.slice(0, displayDisIP.length-1));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,7 +94,7 @@ function shortVer(){
     displayDisIP += arDisIP[i] + '.';
   }
   brLine("Network address: " + displayNetIP.slice(0, displayNetIP.length-1));
-  brLine("Distributing address: " + displayDisIP.slice(0, displayDisIP.length-1));
+  brLine("Broadcast address: " + displayDisIP.slice(0, displayDisIP.length-1));
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -148,10 +134,6 @@ function arrayMAC(){
 function brLine(aText){
   let newBreak = document.createElement("BR");
   let newText = document.createTextNode(aText);
-  newElement.appendChild(newText);
-  newElement.appendChild(newBreak);
-  result.parentNode.appendChild(newElement);
+  result.appendChild(newText);
+  result.appendChild(newBreak);
 }
-
-  </script>
-</html>
