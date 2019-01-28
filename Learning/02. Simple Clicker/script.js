@@ -31,8 +31,8 @@ function inc(){
   display.innerHTML = wallet;
   for(var x in weapons){
     console.log(x)
-    console.log(x.price)
-    /*if(x.price<=wallet){
+    /*console.log(x.price)
+    if(x.price<=wallet){
       console.log("true")
       x.assignedButton.disabled = "false";
     }*/
