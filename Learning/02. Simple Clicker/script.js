@@ -32,9 +32,12 @@ function inc(){
   for(var x in weapons){
     if(weapons[x].price<=wallet){
       weapons[x].assign.disabled = false;
+    }else{
+      weapons[x].assign.disabled = true;
     }
   }
 }
 
 function buy(obj){
+  
 }
