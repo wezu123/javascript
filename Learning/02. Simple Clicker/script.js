@@ -30,11 +30,14 @@ function inc(){
   wallet += user.weapon.damage;
   display.innerHTML = wallet;
   for(var x in weapons){
-    console.log(x)
-    /*console.log(x.price)
-    if(x.price<=wallet){
-      console.log("true")
-      x.assignedButton.disabled = "false";
-    }*/
+    if(weapons[x].price<=wallet){
+      weapons[x].assign.disabled = false;
+    }else{
+      weapons[x].assign.disabled = true;
+    }
   }
+}
+
+function buy(obj){
+  
 }
