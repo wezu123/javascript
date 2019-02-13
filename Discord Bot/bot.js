@@ -3,55 +3,63 @@ const client = new Discord.Client();
 
 client.on('ready', () => {
     console.log("Connected as " + client.user.tag)
-})
+    console.log(client.readyAt)
+    var usedChannel = client.channels.get("343067505864212480");
 
-client.on('ready', () => {
-    // List servers the bot is connected to
-    console.log("Servers:")
-    client.guilds.forEach((guild) => {
-        console.log(" - " + guild.name)
+  if(usedChannel != undefined){
+    client.on('voiceStateUpdate', (oldMember, newMember) => {
+      let newUserChannel = newMember.voiceChannel;
+      let oldUserChannel = oldMember.voiceChannel;
+      let generalChannel = client.channels.get("343067505864212480"); // Replace with known channel ID
 
-        // List all channels
-        guild.channels.forEach((channel) => {
-            console.log(` -- ${channel.name} (${channel.type}) - ${channel.id}`)
-        })
-    })
-})
-
-
-
-  client.on('voiceStateUpdate', (oldMember, newMember) => {
-  let newUserChannel = newMember.voiceChannel;
-  let oldUserChannel = oldMember.voiceChannel;
-  var generalChannel = client.channels.get("343067505864212480"); // Replace with known channel ID
-
-  if(oldUserChannel === undefined && newUserChannel !== undefined) {
-    generalChannel.send({embed: {
-        color: 0x20cc2c,
-        author: {
-          name: newMember.displayName,
-          icon_url: newMember.user.avatarURL
-        },
-        title: "<@!" + newMember.id + ">" + " entered the channel " + newUserChannel,
-        //description: newUserChannel,
-        //fields: [{
-        //    name: "Fields",
-        //    value: "They can have different fields with small headlines."
-        //  }
-        //],
-        timestamp: new Date(),
-        footer: {
-          icon_url: client.user.avatarURL,
-          text: "ID: " + newMember.id
+      if(oldUserChannel === undefined && newUserChannel !== undefined) {
+        generalChannel.send({embed: {
+            color: 0x20cc2c,
+            author: {
+              name: newMember.user.tag,
+              icon_url: newMember.user.avatarURL
+            },
+            description: ("<@" + newMember.id + "> has entered the channel " + "**" + newUserChannel + "**"),
+            timestamp: new Date(),
+            footer: {
+              icon_url: client.user.avatarURL,
+              text: "ID: " + newMember.id
+            }
+          }
+        });
+      } else if(newUserChannel !== undefined && oldUserChannel !== undefined){
+        generalChannel.send({embed: {
+            color: 0x267fe5,
+            author: {
+              name: newMember.user.tag,
+              icon_url: newMember.user.avatarURL
+            },
+            description: ("<@" + newMember.id + "> has switched the channel to " + "**" + newUserChannel + "**"),
+            timestamp: new Date(),
+            footer: {
+              icon_url: client.user.avatarURL,
+              text: "ID: " + newMember.id
+            }
+          }
+        });
+      } else if(newUserChannel === undefined){
+          generalChannel.send({embed: {
+            color: 0xe52727,
+            author: {
+              name: oldMember.user.tag,
+              icon_url: oldMember.user.avatarURL
+            },
+            description: ("<@" + oldMember.id + "> has left the channel " + "**" + oldUserChannel + "**"),
+            timestamp: new Date(),
+            footer: {
+              icon_url: client.user.avatarURL,
+              text: "ID: " + oldMember.id
+            }
+          }
+        });
       }
-    }
-  });
-    /*generalChannel.send("Account " + newMember.displayName + " joined the voice channel by ID " + newMember.id);
-    generalChannel.send("Channel joined: " + newMember.voiceChannel);*/
-  } else if(newUserChannel === undefined){
-    /*generalChannel.sendEmbed("Account " + oldMember.displayName + " left the voice channel by ID " + oldMember.id);
-    generalChannel.sendEmbed("Channel left: " + oldMember.voiceChannel);*/
+    });
   }
 })
 
-client.login("Fuck you and your scam sites")
+client.login("NTQxNDI5MDQ1NTA2NzM2MTI5.Dzzj3Q.-ll0Ed65EmkJoz-U6t79KOgwTw8")
