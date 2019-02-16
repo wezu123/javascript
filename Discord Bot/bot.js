@@ -10,12 +10,14 @@ client.on('ready', () => {
     start();
 });
 
+///////////////////////////////////////////////////////////////////////////////
+
 client.on('message', (message) => {
   var generalChannel = client.channels.get("343067505864212480");
 
-  if(message.author.bot == false && message.content.indexOf(config.prefix) == 0){
+  if(message.author.bot == false && message.content.startsWith(config.prefix) == true){
     var command = message.content.split(' ');
-    var action = command[0].slice(1);
+    var action = command[0].slice(config.prefix.length);
     console.log(command)
 
     switch (action) {
@@ -48,6 +50,8 @@ client.on('message', (message) => {
       }
     }
 });
+
+///////////////////////////////////////////////////////////////////////////////
 
 function start(){
   var generalChannel = client.channels.get("343067505864212480");
@@ -117,4 +121,3 @@ function start(){
 }
 
 client.login(config.token)
-//I just want to know why do you look for unsecured bots on GitHub all the time.
