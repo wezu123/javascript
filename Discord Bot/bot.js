@@ -4,14 +4,14 @@ const configRead = fs.readFileSync('config.json');
 const configFile = 'config.json';
 const config = JSON.parse(configRead);
 const client = new Discord.Client();
+var note;
 var voice = new Array;
 
 client.on('ready', () => {
-    var generalChannel = client.channels.get("343067505864212480");
+    global.generalChannel = client.channels.get("343067505864212480");
     console.log(`Connected as ${client.user.tag}`)
     console.log(client.readyAt)
     console.log(`Loaded with prefix: ${config.prefix}`)
-    start();
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,9 +25,9 @@ client.on('message', (message) => {
     console.log(command)
 
     switch (action) {
-    /*case 'joke':
+    case 'joke':
         message.channel.send(config.joke);
-      break;*/
+      break;
       case 'help':
         message.channel.send(`**Current commands**: play, joke, mute, help \n**Current prefix**: ${config.prefix}`);
       break;
@@ -64,8 +64,9 @@ client.on('message', (message) => {
         }
       break;
       case 'note':
-        if(command[0] == "set"){
-          noteChannel = message.channel;
+        if(command[1] == "set"){
+          global.note = message.channel;
+          console.log(message.channel)
         }
       break;
       default:
@@ -76,71 +77,70 @@ client.on('message', (message) => {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-function start(){
-  var generalChannel = client.channels.get("343067505864212480");
-  if(generalChannel !== undefined){
+client.on('voiceStateUpdate', (oldMember, newMember) => {
+  if(global.note !== undefined){
     console.log("Bot channel defined")
+    note = global.note;
+    let newUserChannel = newMember.voiceChannel;
+    let oldUserChannel = oldMember.voiceChannel;
 
-    client.on('voiceStateUpdate', (oldMember, newMember) => {
-      let newUserChannel = newMember.voiceChannel;
-      let oldUserChannel = oldMember.voiceChannel;
-
-      if(oldUserChannel === undefined && newUserChannel !== undefined) {
-        if(newUserChannel.parent.id == '423153937084973057'){
-          generalChannel.send({embed: {
-              color: 0x42f456,
-              author: {
-                name: newMember.user.tag,
-                icon_url: newMember.user.avatarURL
-              },
-              description: (`<@${newMember.id}> has entered the channel ** ${newUserChannel} **`),
-              timestamp: new Date(),
-              footer: {
-                //icon_url: client.user.avatarURL,
-                text: "ID: " + newMember.id
-              }
-            }
-          });
-        }else{console.log("Wrong category 0")}
-      } else if(newUserChannel !== undefined && oldUserChannel !== undefined){
-        if(newUserChannel.parent.id == '423153937084973057'){
-          generalChannel.send({embed: {
-              color: 0x267fe5,
-              author: {
-                name: newMember.user.tag,
-                icon_url: newMember.user.avatarURL
-              },
-              description: (`<@${newMember.id}> has switched the channel to **${newUserChannel}**`),
-              timestamp: new Date(),
-              footer: {
-                //icon_url: client.user.avatarURL,
-                text: "ID: " + newMember.id
-              }
-            }
-          });
-        }else{console.log("Wrong category 1")}
-      } else if(newUserChannel === undefined){
-        if(oldUserChannel.parent.id == '423153937084973057'){
-          generalChannel.send({embed: {
-            color: 0xe52727,
+    if(oldUserChannel === undefined && newUserChannel !== undefined) {
+      if(newUserChannel.parent.id == '423153937084973057'){
+        note.send({embed: {
+            color: 0x42f456,
             author: {
-              name: oldMember.user.tag,
-              icon_url: oldMember.user.avatarURL
+              name: newMember.user.tag,
+              icon_url: newMember.user.avatarURL
             },
-            description: ("<@" + oldMember.id + "> has left the channel " + "**" + oldUserChannel + "**"),
+            description: (`<@${newMember.id}> has entered the channel ** ${newUserChannel} **`),
             timestamp: new Date(),
             footer: {
               //icon_url: client.user.avatarURL,
-              text: "ID: " + oldMember.id
+              text: "ID: " + newMember.id
             }
           }
-          });
-        }else{console.log("Wrong category 2")}
-      }
-    });
+        });
+      }else{console.log("Wrong join")}
+    }else if(newUserChannel !== undefined && oldUserChannel !== undefined){
+      if(newUserChannel.parent.id == '423153937084973057'){
+        note.send({embed: {
+            color: 0x267fe5,
+            author: {
+              name: newMember.user.tag,
+              icon_url: newMember.user.avatarURL
+            },
+            description: (`<@${newMember.id}> has switched the channel to **${newUserChannel}**`),
+            timestamp: new Date(),
+            footer: {
+              //icon_url: client.user.avatarURL,
+              text: "ID: " + newMember.id
+            }
+          }
+        });
+      }else{console.log("Wrong switch")}
+    } else if(newUserChannel === undefined){
+      if(oldUserChannel.parent.id == '423153937084973057'){
+        note.send({embed: {
+          color: 0xe52727,
+          author: {
+            name: oldMember.user.tag,
+            icon_url: oldMember.user.avatarURL
+          },
+          description: ("<@" + oldMember.id + "> has left the channel " + "**" + oldUserChannel + "**"),
+          timestamp: new Date(),
+          footer: {
+            //icon_url: client.user.avatarURL,
+            text: "ID: " + oldMember.id
+          }
+        }
+        });
+      }else{console.log("Wrong leave")}
+    }
   }else{console.log("Undefined channel")}
-}
-
+});
 //////////////////////////////////////////////////////////////////////////////
+
+
+
 
 client.login(config.token)
