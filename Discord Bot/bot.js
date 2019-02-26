@@ -4,14 +4,16 @@ const configRead = fs.readFileSync('config.json');
 const configFile = 'config.json';
 const config = JSON.parse(configRead);
 const client = new Discord.Client();
-var note;
 var voice = new Array;
+global.note;
 
 client.on('ready', () => {
+    global.note = client.channels.find(channel => channel.id == config.note)
     global.generalChannel = client.channels.get("343067505864212480");
     console.log(`Connected as ${client.user.tag}`)
     console.log(client.readyAt)
     console.log(`Loaded with prefix: ${config.prefix}`)
+    console.log(global.note)
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,8 +67,10 @@ client.on('message', (message) => {
       break;
       case 'note':
         if(command[1] == "set"){
-          global.note = message.channel;
-          console.log(message.channel)
+          config.note = message.channel.id;
+          console.log(message.channel.name)
+          global.note = client.channels.find(channel => channel.id == config.note)
+          fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
         }
       break;
       default:
@@ -80,13 +84,12 @@ client.on('message', (message) => {
 client.on('voiceStateUpdate', (oldMember, newMember) => {
   if(global.note !== undefined){
     console.log("Bot channel defined")
-    note = global.note;
     let newUserChannel = newMember.voiceChannel;
     let oldUserChannel = oldMember.voiceChannel;
 
     if(oldUserChannel === undefined && newUserChannel !== undefined) {
       if(newUserChannel.parent.id == '423153937084973057'){
-        note.send({embed: {
+        global.note.send({embed: {
             color: 0x42f456,
             author: {
               name: newMember.user.tag,
@@ -103,7 +106,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
       }else{console.log("Wrong join")}
     }else if(newUserChannel !== undefined && oldUserChannel !== undefined){
       if(newUserChannel.parent.id == '423153937084973057'){
-        note.send({embed: {
+        global.note.send({embed: {
             color: 0x267fe5,
             author: {
               name: newMember.user.tag,
@@ -120,7 +123,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
       }else{console.log("Wrong switch")}
     } else if(newUserChannel === undefined){
       if(oldUserChannel.parent.id == '423153937084973057'){
-        note.send({embed: {
+        global.note.send({embed: {
           color: 0xe52727,
           author: {
             name: oldMember.user.tag,
