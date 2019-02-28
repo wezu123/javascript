@@ -4,16 +4,19 @@ const configRead = fs.readFileSync('config.json');
 const configFile = 'config.json';
 const config = JSON.parse(configRead);
 const client = new Discord.Client();
-var voice = new Array;
 global.note;
+global.log = new Array;
 
 client.on('ready', () => {
+    for(let i=0;config.voice.length>i;i++){
+      global.log[i] = client.channels.find(channel => channel.id == config.voice[i]);
+    }
     global.note = client.channels.find(channel => channel.id == config.note)
     global.generalChannel = client.channels.get("343067505864212480");
     console.log(`Connected as ${client.user.tag}`)
     console.log(client.readyAt)
     console.log(`Loaded with prefix: ${config.prefix}`)
-    console.log(global.note)
+    console.log("Note channel is " + global.note.name)
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,31 +40,31 @@ client.on('message', (message) => {
         if(command[1] != undefined){
           config.prefix = command[1];
           message.channel.send(`**Prefix** set to ${config.prefix}.`);
-          fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
         }else{
           message.channel.send('Empty paramater, parse the prefix after whitespace');
         }
       break;
       case 'voice':
         if(command[1] == "set"){
-          voice = [];
-          voice[0] = message.member.voiceChannel;
-          console.log(voice)
+          config.voice = [];
+          config.voice[0] = message.member.voiceChannel.id;
+          console.log(config.voice)
         }else if(command[1] == "reset"){
-          voice = [];
-          console.log(voice)
+          config.voice = [];
+          console.log(config.voice)
         }else if(command[1] == "add"){
-          if(voice.includes(message.member.voiceChannel) == false){
-            voice.push(message.member.voiceChannel);
-            console.log(voice[voice.length - 1].name)
+          if(config.voice.includes(message.member.voiceChannel.id) == false){
+            config.voice.push(message.member.voiceChannel.id);
+            console.log(config.voice[config.voice.length - 1].name)
           }else{
             console.log("Channel already included")
           }
         }else if(command[1] == "parent"){
           console.log(message.member.voiceChannel.parent.name)
         }else if(command[1] == "log"){
-          for(let i=0;i<voice.length;i++){
-            console.log(voice[i].name)
+          message.channel.send("List of voice channels:")
+          for(let i=0;i<global.log.length;i++){
+            message.channel.send("**#" + global.log[i].name + "**")
           }
         }
       break;
@@ -70,12 +73,13 @@ client.on('message', (message) => {
           config.note = message.channel.id;
           console.log(message.channel.name)
           global.note = client.channels.find(channel => channel.id == config.note)
-          fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+          global.note.send(`Notification channel for voice updates set to **#${global.note.name}**.`)
         }
       break;
       default:
         message.channel.send(`Incorrect command, please use ${config.prefix}help for more information`);
       }
+      fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
     }
 });
 
@@ -88,7 +92,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
     let oldUserChannel = oldMember.voiceChannel;
 
     if(oldUserChannel === undefined && newUserChannel !== undefined) {
-      if(newUserChannel.parent.id == '423153937084973057'){
+      if(newUserChannel.parent.id == config.voice[0] || config.voice.includes(newUserChannel.id)){
         global.note.send({embed: {
             color: 0x42f456,
             author: {
@@ -105,7 +109,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
         });
       }else{console.log("Wrong join")}
     }else if(newUserChannel !== undefined && oldUserChannel !== undefined){
-      if(newUserChannel.parent.id == '423153937084973057'){
+      if(newUserChannel.parent.id == config.voice[0] || config.voice.includes(newUserChannel.id)){
         global.note.send({embed: {
             color: 0x267fe5,
             author: {
@@ -122,7 +126,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
         });
       }else{console.log("Wrong switch")}
     } else if(newUserChannel === undefined){
-      if(oldUserChannel.parent.id == '423153937084973057'){
+      if(oldUserChannel.parent.id == config.voice[0] || config.voice.includes(oldUserChannel.id)){
         global.note.send({embed: {
           color: 0xe52727,
           author: {
