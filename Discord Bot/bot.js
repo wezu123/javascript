@@ -195,7 +195,9 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
     let oldUserChannel = oldMember.voiceChannel;
 
     if(oldUserChannel === undefined && newUserChannel !== undefined) {
+      console.log("1")
       if(config.parent.includes(newUserChannel.parent.id) || config.voice.includes(newUserChannel.id)){
+        console.log("2")
         global.note.send({embed: {
             color: 0x42f456,
             author: {
@@ -209,7 +211,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
             }
           }
         });
-      }//else{console.log("Wrong join")}
+      }else{console.log("Wrong join")}
     }else if(newUserChannel !== undefined && oldUserChannel !== undefined && config.switch == 1){
       if(config.parent.includes(newUserChannel.parent.id) || config.voice.includes(newUserChannel.id)){
         global.note.send({embed: {
@@ -225,8 +227,8 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
             }
           }
         });
-      }//else{console.log("Wrong switch")}
-    } else if(newUserChannel === undefined && config.leave == 1){
+      }else{console.log("Wrong switch")}
+    }else if(newUserChannel === undefined && config.leave == 1){
       if(config.parent.includes(oldUserChannel.parent.id) || config.voice.includes(oldUserChannel.id)){
         global.note.send({embed: {
           color: 0xe52727,
@@ -241,7 +243,7 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
           }
         }
         });
-      }//else{console.log("Wrong leave")}
+      }else{console.log("Wrong leave")}
     }
   }else{console.log("Undefined channel")}
 });
