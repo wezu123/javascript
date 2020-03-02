@@ -1,5 +1,5 @@
 const display = document.querySelector("#display");
-var wallet = 0;
+var wallet = 16;
 
 const weapons = {
   woodPick : {
@@ -39,5 +39,10 @@ function inc(){
 }
 
 function buy(obj){
-  
+  console.log(weapons.eval(obj))
+  if(wallet>weapons.eval(obj).price){
+  wallet -= weapons.test.price;
+  user.weapon = weapons.test;
+  inc();
+}
 }
